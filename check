@@ -4,9 +4,9 @@ set -e
 
 payload=$(mktemp /tmp/resource-check.XXXXXX)
 
-cat > $payload <&0
+cat >$payload <&0
 
-original_time=$(jq -r '.version?.time? // ""' < $payload)
+original_time=$(jq -r '.version?.time? // ""' <$payload)
 
 if [ -z "$original_time" ]; then
   echo "[{\"time\": \"$(date +%s)\"}]"

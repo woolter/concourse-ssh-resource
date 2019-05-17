@@ -14,18 +14,18 @@ fi
 
 payload=$(mktemp /tmp/resource-out.XXXXXX)
 
-cat > $payload <&0
+cat >$payload <&0
 
 cd $source
 
-hostname=$(jq -r '.source.hostname' < $payload)
-username=$(jq -r '.source.username' < $payload)
-port=$(jq -r '.source.port // "22"' < $payload)
+hostname=$(jq -r '.params.hostname' <$payload)
+username=$(jq -r '.source.username' <$payload)
+port=$(jq -r '.params.port // "22"' <$payload)
 private_key_file=$(mktemp /tmp/resource-out.XXXXXX)
 chmod 600 $private_key_file
-jq -r '.source.private_key // ""' $payload > $private_key_file
+jq -r '.source.private_key // ""' $payload >$private_key_file
 
-command=$(jq -r '.params.command' < $payload)
+command=$(jq -r '.params.command' <$payload)
 
 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -p $port -i $private_key_file $username@$hostname $command
 

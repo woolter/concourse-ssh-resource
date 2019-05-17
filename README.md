@@ -1,7 +1,10 @@
 # SSH Resource
 
+Fork form https://github.com/edtan/concourse-ssh-resource
+
 A resource for running a command through SSH primarily for simple deploys based on a small alpine base image.
 
+Add support for hostname and port variable.
 ## Installing
 
 Add the following to the `resource_types` section of a pipeline config:
@@ -23,18 +26,13 @@ resources:
 - name: my-server-ssh
   type: concourse-ssh-resource
   source:
-    hostname: my-server-hostname
     username: my-username
     private_key: ((ssh-private-key))
 ```
 
-* `hostname`: *Required.* Server to connect to.
-
 * `username`: *Required.* Username.
 
 * `private_key`: *Required.* The private key to use - use a [credentials manager](https://concourse-ci.org/creds.html) for this!
-
-* `port`: *Optional. Default `22`.* Port.
 
 ## `check`: no-op
 
@@ -58,9 +56,12 @@ ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -p $port -i $private_key_fil
 plan:
 - put: my-server-ssh
   params:
+    hostname: my-server-hostname
     command: ./deploy.sh
 ```
 
 ### Parameters
 
+* `hostname`: *Required.* Server to connect to.
+* `port`: *Optional. Default `22`.* Port.
 * `command`: *Required.* The command to run on the server.
